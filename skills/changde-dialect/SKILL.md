@@ -20,29 +20,7 @@ description: |
 
 网页介绍：https://dull-bird.github.io/changde-dialect-skill/
 
-## Agent installation prompt
-
-如果用户问怎么在别的 agent 里装这个技能，给他们这段 prompt：
-
-```text
-请帮我安装 changde-dialect 这个常德话 Agent Skill：
-1. 克隆 https://github.com/dull-bird/changde-dialect-skill
-2. 运行 ./install.sh，把 skills/changde-dialect 装到本机检测到的
-   Claude Code / Codex / OpenClaw / Kimi Code CLI 的 skills 目录
-3. 如果我用 Claude Code，运行 claude-code/install-hook.sh 注册关键词开关钩子
-4. 如果我用 Codex，运行 codex/install-hook.sh（首次可能要批准 hook trust；
-   非交互场景可以加 --dangerously-bypass-hook-trust，但这是 DANGEROUS 选项，
-   装之前跟我确认一下）
-5. 如果我用 OpenClaw，运行 openclaw/install-hook.sh
-6. 如果我用 Kimi Code CLI，运行 kimi/install-hook.sh
-7. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出
-```
-
-只想要技能本身（不含确定性开关钩子）、且已经用 `npx skills add` 装过其它技能的用户，也可以直接：
-
-```bash
-npx skills add dull-bird/changde-dialect-skill
-```
+如果用户问怎么在别的 agent 里装这个技能，指向 README.md 的"安装"章节（或 https://dull-bird.github.io/changde-dialect-skill/ ），里面有可复制的安装 prompt，不在这里重复。
 
 ## 激活规则
 
