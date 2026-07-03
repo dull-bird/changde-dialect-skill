@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>changde-dialect-skill — 常德话 Agent Skill</title>
+<meta name="description" content="用常德话跟 Claude Code / Codex / OpenClaw 聊天的 Agent Skill，基于《常德方言词语汇1000》整理，带三平台通用的关键词开关钩子。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%A3%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#f6f7f9;--fg:#11161d;--muted:#69707b;--line:#e7e9ee;--card:#fff;--brand:#1556e0;--brand2:#7c3aed}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--muted:#8b949e;--line:#21262d;--card:#161b22}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px}
+header{text-align:center;padding:70px 22px 32px;background:radial-gradient(900px 380px at 50% -120px,color-mix(in srgb,var(--brand) 16%,transparent),transparent)}
+.logo{display:inline-flex;align-items:center;justify-content:center;gap:12px;font-size:34px;font-weight:800;letter-spacing:0}
+.logo .emoji{font-size:46px;line-height:1}
+.logo .d{color:var(--brand)}
+.tag{font-size:20px;font-weight:600;max-width:680px;margin:18px auto 6px}
+.sub{color:var(--muted);max-width:760px;margin:0 auto}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:28px 0 6px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:11px;font-weight:600;font-size:15px;border:1px solid var(--line);cursor:pointer}
+.btn.primary{background:var(--brand);color:#fff;border-color:transparent}
+.btn.ghost{background:var(--card);color:var(--fg)}
+.note{color:var(--muted);font-size:13px;max-width:640px;margin:12px auto 0;line-height:1.7}
+section{padding:50px 0}
+h2{font-size:24px;letter-spacing:-.02em;text-align:center;margin:0 0 8px}
+.h2sub{text-align:center;color:var(--muted);margin:0 0 26px;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.feat .n{font-size:26px;font-weight:800;color:var(--brand)}
+.feat h3{margin:6px 0 4px;font-size:14px}
+.feat p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.5}
+pre{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-size:13.5px;line-height:1.7;text-align:left}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.copybox{position:relative;margin:10px 0 0}
+.copybox pre{margin:0;padding-right:86px}
+.copybtn{position:absolute;top:10px;right:10px;background:var(--brand);color:#fff;border:0;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 6px 16px -10px #1556e0}
+.copybtn:hover{filter:brightness(1.06)}
+.copybtn:active{transform:translateY(1px)}
+.copybtn.done{background:#059669}
+.ways{max-width:720px;margin:10px auto 0;text-align:left}
+.way{padding:20px 0;border-top:1px solid var(--line)}
+.way:first-child{border-top:0;padding-top:6px}
+.way h3{margin:0 0 8px;font-size:16px;display:flex;align-items:center;gap:8px}
+.way .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:color-mix(in srgb,var(--brand) 12%,transparent);color:var(--brand)}
+.way .badge.partial{background:color-mix(in srgb,#c77400 14%,transparent);color:#c77400}
+.way p{margin:0;color:var(--muted);font-size:14px;line-height:1.75}
+.way pre{margin:10px 0 0}
+.chat{max-width:560px;margin:26px auto 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 12px 40px -20px #1b212833}
+.bubble{border-radius:12px;padding:10px 14px;margin:8px 0;font-size:14.5px;max-width:88%}
+.bubble.you{background:color-mix(in srgb,var(--brand) 10%,var(--card));margin-left:auto;text-align:right}
+.bubble.ai{background:var(--bg);border:1px solid var(--line)}
+.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.cmp th,.cmp td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.cmp tr:last-child td{border-bottom:0}
+.cmp thead th{font-size:12.5px;background:color-mix(in srgb,var(--brand) 5%,var(--card))}
+.cmp td:first-child{font-weight:600;width:16%}
+.cmp code{background:var(--bg);padding:1px 5px;border-radius:5px;font-size:12px}
+.cmp-wrap{overflow-x:auto;border-radius:14px;box-shadow:0 12px 40px -20px #1b212833}
+.status{font-weight:700}
+.status.ok{color:#059669}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:40px 22px 60px;border-top:1px solid var(--line)}
+footer a{color:var(--muted);text-decoration:underline}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+<div class="logo"><span class="emoji">🗣️</span><span>常德话 <span class="d">Skill</span></span></div>
+<p class="tag">用常德话跟 Claude Code / Codex / OpenClaw 聊天的 Agent Skill</p>
+<p class="sub">基于《常德方言词语汇1000》（水兵1986编）整理：994 条日常词条 + 151 条桃源本地歇后语，配三平台都验证跑通的关键词开关钩子——说「说常德话」就开，说「说普通话」就关。</p>
+<div class="cta">
+<a class="btn primary" href="#install">安装</a>
+<a class="btn ghost" href="https://github.com/dull-bird/changde-dialect-skill">GitHub ↗</a>
+</div>
+<p class="note">技能内容整理自水兵1986发布在美篇的公开文章，原作者欢迎修订补充；本仓库 MIT 开源。</p>
+</div>
+
+<div class="chat">
+<div class="bubble you">说常德话，你好</div>
+<div class="bubble ai">好啵！俺今朝刚上线，你就来哒。有么得事要搞，你港给俺听斗起？</div>
+<div class="bubble you">好了，说普通话吧</div>
+<div class="bubble ai">好的，已经切回普通话了！有什么可以帮你的？</div>
+</div>
+</header>
+
+<section>
+<div class="wrap">
+<h2>词汇分类</h2>
+<p class="h2sub">994 条日常词条按语义启发式归类，另有 151 条桃源本地歇后语单独收录</p>
+<div class="grid">
+<div class="feat"><div class="n">120</div><h3>称谓与人称</h3><p>俺、玩屋里男客/堂客、嘎公嘎嘎、幺幺……</p></div>
+<div class="feat"><div class="n">78</div><h3>动植物名称</h3><p>溜蚣（蛇）、老虫（老虎）、克马（青蛙）……</p></div>
+<div class="feat"><div class="n">46</div><h3>农具生活用具</h3><p>撮箕、扁屯、镐锄、笼罐……</p></div>
+<div class="feat"><div class="n">32</div><h3>身体部位</h3><p>膝老壳、倒拐子、渣渣……</p></div>
+<div class="feat"><div class="n">22</div><h3>民俗礼仪丧葬</h3><p>送亮、上祭、奈何桥……</p></div>
+<div class="feat"><div class="n">24+</div><h3>骂人贬损粗语</h3><p>核宝、搅屎棍、癫嘎恰嘎……</p></div>
+<div class="feat"><div class="n">151</div><h3>桃源本地歇后语</h3><p>瞎子点灯——白费蜡……</p></div>
+<div class="feat"><div class="n">508</div><h3>其余日常用语</h3><p>核心动词、程度副词、状态描述、俗语</p></div>
+</div>
+</div>
+</section>
+
+<section style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<div class="wrap">
+<h2>三个平台，钩子都真的验证过</h2>
+<p class="h2sub">不是模型自己猜关键词，是每个平台原生的钩子机制，按会话记录开关状态</p>
+<div class="cmp-wrap">
+<table class="cmp">
+<thead><tr><th>工具</th><th>钩子机制</th><th>验证方式</th><th>状态</th></tr></thead>
+<tbody>
+<tr><td>Claude Code</td><td><code>~/.claude/settings.json</code> 的 <code>UserPromptSubmit</code>（Python）</td><td>pipe 测试开/关/持久化/多会话隔离</td><td class="status ok">✓ 已验证</td></tr>
+<tr><td>Codex</td><td><code>~/.codex/config.toml</code> 的 <code>[[hooks.UserPromptSubmit]]</code>（同一份 Python 脚本）</td><td><code>codex exec</code> 真实跑通，日志可见 hook 触发</td><td class="status ok">✓ 已验证</td></tr>
+<tr><td>OpenClaw</td><td><code>~/.openclaw/hooks/</code> 的 <code>HOOK.md</code> + <code>handler.ts</code>（<code>message:received</code> + <code>agent:bootstrap</code>）</td><td><code>openclaw agent --local</code> 真实跑通，开/关/持久化全过</td><td class="status ok">✓ 已验证</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="install">
+<div class="wrap">
+<h2>安装</h2>
+<p class="h2sub">三种方式；只有前两种能装上钩子（确定性开关），第三种只装技能本身</p>
+<div class="ways">
+
+<div class="way">
+<h3>① 让 AI agent 自动装 <span class="badge">技能 + 钩子</span></h3>
+<p>把下面这段发给 Claude Code / Codex / OpenClaw，它会克隆仓库、按你装的工具装好技能和对应钩子：</p>
+<div class="copybox">
+<button class="copybtn" type="button" data-copy="agent-prompt">复制</button>
+<pre><code id="agent-prompt">请帮我安装 changde-dialect 这个常德话 Agent Skill：
+1. 克隆 https://github.com/dull-bird/changde-dialect-skill
+2. 运行 ./install.sh，把 skills/changde-dialect 装到本机检测到的
+   Claude Code / Codex / OpenClaw 的 skills 目录
+3. 如果我用 Claude Code，运行 claude-code/install-hook.sh 注册关键词开关钩子
+4. 如果我用 Codex，运行 codex/install-hook.sh（首次可能要批准 hook trust；
+   非交互场景可以加 --dangerously-bypass-hook-trust，但这是 DANGEROUS 选项，
+   装之前跟我确认一下）
+5. 如果我用 OpenClaw，运行 openclaw/install-hook.sh
+6. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出</code></pre>
+</div>
+</div>
+
+<div class="way">
+<h3>② 手动 clone + install.sh <span class="badge">技能 + 钩子</span></h3>
+<div class="copybox">
+<button class="copybtn" type="button" data-copy="clone-cmd">复制</button>
+<pre><code id="clone-cmd">git clone https://github.com/dull-bird/changde-dialect-skill.git
+cd changde-dialect-skill
+./install.sh                    # 装技能到检测到的所有工具
+./claude-code/install-hook.sh   # 可选：Claude Code 关键词开关钩子
+./codex/install-hook.sh         # 可选：Codex 关键词开关钩子
+./openclaw/install-hook.sh      # 可选：OpenClaw 关键词开关钩子</code></pre>
+</div>
+</div>
+
+<div class="way">
+<h3>③ npx skills 一键装 <span class="badge partial">仅技能，不含钩子</span></h3>
+<p>用 <a href="https://skills.sh">skills.sh</a> 的通用安装器，实测能正确识别并装好 <code>skills/changde-dialect</code>，自动适配 Claude Code / Codex / Cursor / OpenClaw 等 70 余个 agent；但它只拷贝技能文件，不会帮你注册确定性开关钩子（想要钩子还是走①或②）。</p>
+<div class="copybox">
+<button class="copybtn" type="button" data-copy="npx-cmd">复制</button>
+<pre><code id="npx-cmd">npx skills add dull-bird/changde-dialect-skill</code></pre>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<section style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<div class="wrap">
+<h2>用法</h2>
+<div class="cmp-wrap">
+<table class="cmp">
+<thead><tr><th>说这句话</th><th>效果</th></tr></thead>
+<tbody>
+<tr><td>说常德话 / 讲常德话 / 切换方言 / 开启方言模式</td><td>开启方言对话</td></tr>
+<tr><td>退出方言 / 说普通话 / 切回普通话 / 关闭方言模式</td><td>恢复普通话</td></tr>
+<tr><td>"XX方言是什么意思"</td><td>直接查词条，不用整段切方言</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note" style="margin-top:18px">代码、命令、报错等技术性输出不会被方言化。骂人/粗语词条只用于轻度打趣或用户主动询问词义，不用来真正冒犯人。</p>
+</div>
+</section>
+
+<footer>
+changde-dialect-skill · MIT License · 词汇整理自水兵1986《<a href="https://www.meipian.cn/m5r5mum">常德方言词语汇1000</a>》（美篇） · <a href="https://github.com/dull-bird/changde-dialect-skill">github.com/dull-bird/changde-dialect-skill</a>
+</footer>
+
+<script>
+document.querySelectorAll('[data-copy]').forEach(btn=>{
+  btn.addEventListener('click',async()=>{
+    const target=document.getElementById(btn.dataset.copy);
+    if(!target)return;
+    const text=target.textContent;
+    const original=btn.textContent;
+    try{
+      if(navigator.clipboard&&window.isSecureContext){
+        await navigator.clipboard.writeText(text);
+      }else{
+        const area=document.createElement('textarea');
+        area.value=text;
+        area.setAttribute('readonly','');
+        area.style.position='fixed';
+        area.style.left='-9999px';
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        area.remove();
+      }
+      btn.textContent='已复制';
+      btn.classList.add('done');
+      setTimeout(()=>{btn.textContent=original;btn.classList.remove('done')},1400);
+    }catch(_){
+      btn.textContent='复制失败';
+      setTimeout(()=>{btn.textContent=original},1400);
+    }
+  });
+});
+</script>
+</body>
+</html>

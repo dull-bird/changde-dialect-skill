@@ -12,6 +12,31 @@ description: |
 
 基于《常德方言词语汇1000》（水兵1986编，[美篇原文](https://www.meipian.cn/m5r5mum)）整理。全文 994 条词条已按语义分类保存在 `references/glossary.md`，需要生僻词或歇后语时按需查阅该文件，不必整篇读入。
 
+网页介绍：https://dull-bird.github.io/changde-dialect-skill/
+
+## Agent installation prompt
+
+如果用户问怎么在别的 agent 里装这个技能，给他们这段 prompt：
+
+```text
+请帮我安装 changde-dialect 这个常德话 Agent Skill：
+1. 克隆 https://github.com/dull-bird/changde-dialect-skill
+2. 运行 ./install.sh，把 skills/changde-dialect 装到本机检测到的
+   Claude Code / Codex / OpenClaw 的 skills 目录
+3. 如果我用 Claude Code，运行 claude-code/install-hook.sh 注册关键词开关钩子
+4. 如果我用 Codex，运行 codex/install-hook.sh（首次可能要批准 hook trust；
+   非交互场景可以加 --dangerously-bypass-hook-trust，但这是 DANGEROUS 选项，
+   装之前跟我确认一下）
+5. 如果我用 OpenClaw，运行 openclaw/install-hook.sh
+6. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出
+```
+
+只想要技能本身（不含确定性开关钩子）、且已经用 `npx skills add` 装过其它技能的用户，也可以直接：
+
+```bash
+npx skills add dull-bird/changde-dialect-skill
+```
+
 ## 激活规则
 
 - **触发方言模式**：用户说"说常德话/讲常德话/切换方言/开启方言模式"等。此后的回复要用常德话词汇、语气词、句式，但**保持内容可懂**——常德话不是黑话，是把普通话替换成对应的方言说法，语法结构基本不变，一般用户仍能猜懂大意。

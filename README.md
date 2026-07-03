@@ -2,6 +2,8 @@
 
 用常德话（湖南常德方言）跟 AI 对话的 Agent Skill + 关键词开关钩子，**Claude Code、Codex、OpenClaw 三个工具都验证跑通**。
 
+🌐 网页介绍：https://dull-bird.github.io/changde-dialect-skill/
+
 底子是《常德方言词语汇1000》（水兵1986编，[美篇原文](https://www.meipian.cn/m5r5mum)），994 条日常词条 + 151 条桃源本地歇后语，全部按语义分类整理成机器可查的参考文件。
 
 ```
@@ -27,13 +29,37 @@ AI：好的，已经切回普通话了！有什么可以帮你的？
 
 ## 安装
 
+三种方式，前两种能装上技能 + 确定性开关钩子，第三种只装技能本身。
+
+### ① 让 AI agent 自动装（技能 + 钩子）
+
+把下面这段发给 Claude Code / Codex / OpenClaw：
+
+```text
+请帮我安装 changde-dialect 这个常德话 Agent Skill：
+1. 克隆 https://github.com/dull-bird/changde-dialect-skill
+2. 运行 ./install.sh，把 skills/changde-dialect 装到本机检测到的
+   Claude Code / Codex / OpenClaw 的 skills 目录
+3. 如果我用 Claude Code，运行 claude-code/install-hook.sh 注册关键词开关钩子
+4. 如果我用 Codex，运行 codex/install-hook.sh（首次可能要批准 hook trust；
+   非交互场景可以加 --dangerously-bypass-hook-trust，但这是 DANGEROUS 选项，
+   装之前跟我确认一下）
+5. 如果我用 OpenClaw，运行 openclaw/install-hook.sh
+6. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出
+```
+
+### ② 手动 clone + install.sh（技能 + 钩子）
+
 ```bash
 git clone https://github.com/dull-bird/changde-dialect-skill.git
 cd changde-dialect-skill
-./install.sh
+./install.sh                    # 自动探测 ~/.claude、~/.codex、~/.openclaw，装好技能
+./claude-code/install-hook.sh   # 可选：注册到 ~/.claude/settings.json
+./codex/install-hook.sh         # 可选：注册到 ~/.codex/config.toml
+./openclaw/install-hook.sh      # 可选：装到 ~/.openclaw/hooks/ 并 openclaw hooks enable
 ```
 
-`install.sh` 自动探测本机装了哪些工具（`~/.claude`、`~/.codex`、`~/.openclaw`），把 `skills/changde-dialect` 拷贝到对应的 skills 目录：
+技能安装位置：
 
 | 工具 | 技能安装位置 |
 |---|---|
@@ -41,17 +67,19 @@ cd changde-dialect-skill
 | Codex | `~/.codex/skills/changde-dialect` |
 | OpenClaw | `~/.openclaw/skills/changde-dialect`（全局，所有 agent 共用） |
 
-装好技能只是第一步——**装钩子才能有确定性的关键词开关**（不装钩子的话，模型也能通过技能描述自己识别触发词，但没有强制状态锁定）。按你装了哪个工具，再跑对应的：
-
-```bash
-./claude-code/install-hook.sh   # 注册到 ~/.claude/settings.json
-./codex/install-hook.sh         # 注册到 ~/.codex/config.toml
-./openclaw/install-hook.sh      # 装到 ~/.openclaw/hooks/ 并 openclaw hooks enable
-```
-
-三个脚本都是幂等的，重复跑不会重复注册或破坏你已有的配置。
+所有脚本都是幂等的，重复跑不会重复注册或破坏你已有的配置。
 
 **Codex 用户注意**：hook 有个"hook trust"机制，交互式使用时首次可能需要批准；全自动/非交互场景可以加 `--dangerously-bypass-hook-trust`（官方标注 DANGEROUS，谨慎使用，仅在你信任 hook 来源时开）。
+
+### ③ `npx skills` 一键装（仅技能，不含钩子）
+
+实测 [skills.sh](https://skills.sh) 的通用安装器能正确识别并装好 `skills/changde-dialect`，自动适配 Claude Code / Codex / Cursor / OpenClaw 等 70 余个 agent：
+
+```bash
+npx skills add dull-bird/changde-dialect-skill
+```
+
+它只拷贝技能文件（复制/软链接到各工具的 skills 目录），**不会**帮你注册 `claude-code/`、`codex/`、`openclaw/` 下的确定性开关钩子——想要钩子还是走①或②。没装钩子时，触发依然可以工作，只是退化成模型自己识别技能描述里的关键词，没有强制的按会话状态锁定。
 
 ### 手动安装
 
