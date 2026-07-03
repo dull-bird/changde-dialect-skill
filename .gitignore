@@ -1,2 +1,4 @@
 skills/changde-dialect/state/*.json
 openclaw/hooks/changde-dialect-toggle/state/*.json
+__pycache__/
+*.pyc

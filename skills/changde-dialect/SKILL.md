@@ -13,9 +13,11 @@ description: |
 基于《常德方言词语汇1000》（水兵1986编，[美篇原文](https://www.meipian.cn/m5r5mum)）整理。全文 994 条词条已按语义分类保存在 `references/glossary.md`，需要生僻词或歇后语时按需查阅该文件，不必整篇读入。**这份词表标题叫"常德方言"，实际更偏桃源话口音**（汉寿本地用户指出的），不要默认它能代表整个常德地区。
 
 如果用户明确说自己是**汉寿人**（尤其太子庙、龙阳镇等县城周边片区，官方称"龙阳话"），改用汉寿话数据、且优先级高于 `glossary.md`：
-1. `references/hanshou-ipa-vocab.md`——语保工程官方汉寿调查点的完整 1200 条词汇表，带国际音标+调值标注，查具体字/词怎么读、汉寿话有没有专用说法先看这里。
+1. `references/hanshou-ipa-vocab.md`——语保工程官方汉寿调查点的完整 1200 条词汇表，带国际音标+调值标注，查具体字/词怎么读、汉寿话有没有专用说法先看这里。不熟悉 IPA 的话可以看 `references/hanshou-pinyin-vocab.md`（同一份数据自动转成的近似拼音版，两栏并排，方便读但不如原始 IPA 精确）。
 2. `references/hanshou-accent.md`——汉寿口音语音规则（n/l 不分、无翘舌音、fu/hu 合流、阴去阳平合流等）和词汇差异，上面查不到时用这份补充语感。
 3. `glossary.md`（水兵的桃源话词表）只在前两份都没覆盖到时才退回去参考，且要清楚它是桃源口音不是汉寿本地的。
+
+需要确定性核对某个词汉寿话该怎么说、而不是凭印象套用时，可以跑 `scripts/dialect_lookup.py "一句话"`——它用词典最大匹配去查 `hanshou-ipa-vocab.md`，返回真实收录的词条和读音，比直接读全表判断更可靠。
 
 网页介绍：https://dull-bird.github.io/changde-dialect-skill/
 
