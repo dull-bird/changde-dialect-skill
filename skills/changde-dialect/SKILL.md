@@ -5,7 +5,7 @@ description: |
   仅在用户明确要求切换方言时激活——当用户说「说常德话」「讲常德话」「切换常德话」「切换方言」「开启方言模式」「用方言跟我聊」时使用，开始用常德话回应，并在称谓、语气词、句式上保持方言风格直到用户要求退出。
   当用户说「退出方言」「说普通话」「切回普通话」「关闭方言模式」「不用讲方言了」时，退出角色，恢复正常普通话回应。
   也适用于用户询问某个常德方言词/歇后语是什么意思、常德话怎么说某句话、常德方言有哪些特色词汇等查询类问题——此时不需要整段都用方言回复，按需引用 references/glossary.md 中的词条解释即可。
-  兼容 Claude Code、Codex、OpenClaw 等支持 Agent Skills 规范的终端 Agent。
+  兼容 Claude Code、Codex、OpenClaw、Kimi Code CLI 等支持 Agent Skills 规范的终端 Agent。
 ---
 
 # 常德话对话技能
@@ -22,13 +22,14 @@ description: |
 请帮我安装 changde-dialect 这个常德话 Agent Skill：
 1. 克隆 https://github.com/dull-bird/changde-dialect-skill
 2. 运行 ./install.sh，把 skills/changde-dialect 装到本机检测到的
-   Claude Code / Codex / OpenClaw 的 skills 目录
+   Claude Code / Codex / OpenClaw / Kimi Code CLI 的 skills 目录
 3. 如果我用 Claude Code，运行 claude-code/install-hook.sh 注册关键词开关钩子
 4. 如果我用 Codex，运行 codex/install-hook.sh（首次可能要批准 hook trust；
    非交互场景可以加 --dangerously-bypass-hook-trust，但这是 DANGEROUS 选项，
    装之前跟我确认一下）
 5. 如果我用 OpenClaw，运行 openclaw/install-hook.sh
-6. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出
+6. 如果我用 Kimi Code CLI，运行 kimi/install-hook.sh
+7. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出
 ```
 
 只想要技能本身（不含确定性开关钩子）、且已经用 `npx skills add` 装过其它技能的用户，也可以直接：
@@ -42,7 +43,7 @@ npx skills add dull-bird/changde-dialect-skill
 - **触发方言模式**：用户说"说常德话/讲常德话/切换方言/开启方言模式"等。此后的回复要用常德话词汇、语气词、句式，但**保持内容可懂**——常德话不是黑话，是把普通话替换成对应的方言说法，语法结构基本不变，一般用户仍能猜懂大意。
 - **退出方言模式**：用户说"退出方言/说普通话/切回普通话/关闭方言模式"等，立刻恢复正常普通话，不再夹方言词。
 - **查询模式**：用户只是问"XX方言是什么意思""常德话怎么骂人"这类问题时，不必整段切方言，正常解释+引用原词条即可。
-- **Claude Code / Codex** 下，本仓库提供了同一个 UserPromptSubmit 钩子脚本（安装后位于 `~/.claude/skills/changde-dialect/scripts/dialect_hook.py` 或 `~/.codex/skills/changde-dialect/scripts/dialect_hook.py`，需分别跑 `claude-code/install-hook.sh` / `codex/install-hook.sh` 注册），会自动检测上述关键词、按会话维护开关状态，并在开启时把提醒注入上下文。
+- **Claude Code / Codex / Kimi Code CLI** 下，本仓库提供了同一个 UserPromptSubmit 钩子脚本（`~/.claude/skills/changde-dialect/scripts/dialect_hook.py`，Codex 和 Kimi 都能直接复用这一份，因为它们的 hook 事件名和 stdin/stdout JSON 契约跟 Claude Code 基本一致），需分别跑 `claude-code/install-hook.sh` / `codex/install-hook.sh` / `kimi/install-hook.sh` 注册，会自动检测上述关键词、按会话维护开关状态，并在开启时把提醒注入上下文。
 - **OpenClaw** 下，本仓库提供了独立的 `openclaw/hooks/changde-dialect-toggle/`（`message:received` 记录开关状态 + `agent:bootstrap` 注入提醒），跑 `openclaw/install-hook.sh` 安装并启用。
 - 如果对应钩子已经注入了方言指令，直接照做，不需要再重复判断关键词；没装钩子的话，激活退化为模型自己识别上面这些触发词（标准 Agent Skills 的语义匹配方式），效果接近，只是没有确定性状态持久化。
 

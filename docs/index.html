@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>changde-dialect-skill — 常德话 Agent Skill</title>
-<meta name="description" content="用常德话跟 Claude Code / Codex / OpenClaw 聊天的 Agent Skill，基于《常德方言词语汇1000》整理，带三平台通用的关键词开关钩子。">
+<meta name="description" content="用常德话跟 Claude Code / Codex / OpenClaw / Kimi Code CLI 聊天的 Agent Skill，基于《常德方言词语汇1000》整理，带四平台通用的关键词开关钩子。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%A3%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <style>
 :root{--bg:#f6f7f9;--fg:#11161d;--muted:#69707b;--line:#e7e9ee;--card:#fff;--brand:#1556e0;--brand2:#7c3aed}
@@ -70,8 +70,8 @@ footer a{color:var(--muted);text-decoration:underline}
 <header>
 <div class="wrap">
 <div class="logo"><span class="emoji">🗣️</span><span>常德话 <span class="d">Skill</span></span></div>
-<p class="tag">用常德话跟 Claude Code / Codex / OpenClaw 聊天的 Agent Skill</p>
-<p class="sub">基于《常德方言词语汇1000》（水兵1986编）整理：994 条日常词条 + 151 条桃源本地歇后语，配三平台都验证跑通的关键词开关钩子——说「说常德话」就开，说「说普通话」就关。</p>
+<p class="tag">用常德话跟 Claude Code / Codex / OpenClaw / Kimi Code CLI 聊天的 Agent Skill</p>
+<p class="sub">基于《常德方言词语汇1000》（水兵1986编）整理：994 条日常词条 + 151 条桃源本地歇后语，配四平台都验证跑通的关键词开关钩子——说「说常德话」就开，说「说普通话」就关。</p>
 <div class="cta">
 <a class="btn primary" href="#install">安装</a>
 <a class="btn ghost" href="https://github.com/dull-bird/changde-dialect-skill">GitHub ↗</a>
@@ -106,7 +106,7 @@ footer a{color:var(--muted);text-decoration:underline}
 
 <section style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
 <div class="wrap">
-<h2>三个平台，钩子都真的验证过</h2>
+<h2>四个平台，钩子都真的验证过</h2>
 <p class="h2sub">不是模型自己猜关键词，是每个平台原生的钩子机制，按会话记录开关状态</p>
 <div class="cmp-wrap">
 <table class="cmp">
@@ -115,6 +115,7 @@ footer a{color:var(--muted);text-decoration:underline}
 <tr><td>Claude Code</td><td><code>~/.claude/settings.json</code> 的 <code>UserPromptSubmit</code>（Python）</td><td>pipe 测试开/关/持久化/多会话隔离</td><td class="status ok">✓ 已验证</td></tr>
 <tr><td>Codex</td><td><code>~/.codex/config.toml</code> 的 <code>[[hooks.UserPromptSubmit]]</code>（同一份 Python 脚本）</td><td><code>codex exec</code> 真实跑通，日志可见 hook 触发</td><td class="status ok">✓ 已验证</td></tr>
 <tr><td>OpenClaw</td><td><code>~/.openclaw/hooks/</code> 的 <code>HOOK.md</code> + <code>handler.ts</code>（<code>message:received</code> + <code>agent:bootstrap</code>）</td><td><code>openclaw agent --local</code> 真实跑通，开/关/持久化全过</td><td class="status ok">✓ 已验证</td></tr>
+<tr><td>Kimi Code CLI</td><td><code>~/.kimi/config.toml</code> 的 <code>hooks = [{ event = "UserPromptSubmit", ... }]</code>（同一份 Python 脚本）</td><td><code>kimi --print</code> 真实跑通，session 状态文件落盘确认</td><td class="status ok">✓ 已验证</td></tr>
 </tbody>
 </table>
 </div>
@@ -129,19 +130,20 @@ footer a{color:var(--muted);text-decoration:underline}
 
 <div class="way">
 <h3>① 让 AI agent 自动装 <span class="badge">技能 + 钩子</span></h3>
-<p>把下面这段发给 Claude Code / Codex / OpenClaw，它会克隆仓库、按你装的工具装好技能和对应钩子：</p>
+<p>把下面这段发给 Claude Code / Codex / OpenClaw / Kimi Code CLI，它会克隆仓库、按你装的工具装好技能和对应钩子：</p>
 <div class="copybox">
 <button class="copybtn" type="button" data-copy="agent-prompt">复制</button>
 <pre><code id="agent-prompt">请帮我安装 changde-dialect 这个常德话 Agent Skill：
 1. 克隆 https://github.com/dull-bird/changde-dialect-skill
 2. 运行 ./install.sh，把 skills/changde-dialect 装到本机检测到的
-   Claude Code / Codex / OpenClaw 的 skills 目录
+   Claude Code / Codex / OpenClaw / Kimi Code CLI 的 skills 目录
 3. 如果我用 Claude Code，运行 claude-code/install-hook.sh 注册关键词开关钩子
 4. 如果我用 Codex，运行 codex/install-hook.sh（首次可能要批准 hook trust；
    非交互场景可以加 --dangerously-bypass-hook-trust，但这是 DANGEROUS 选项，
    装之前跟我确认一下）
 5. 如果我用 OpenClaw，运行 openclaw/install-hook.sh
-6. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出</code></pre>
+6. 如果我用 Kimi Code CLI，运行 kimi/install-hook.sh
+7. 装完后跟我说"说常德话"确认效果，测试完再说"说普通话"退出</code></pre>
 </div>
 </div>
 
@@ -154,13 +156,14 @@ cd changde-dialect-skill
 ./install.sh                    # 装技能到检测到的所有工具
 ./claude-code/install-hook.sh   # 可选：Claude Code 关键词开关钩子
 ./codex/install-hook.sh         # 可选：Codex 关键词开关钩子
-./openclaw/install-hook.sh      # 可选：OpenClaw 关键词开关钩子</code></pre>
+./openclaw/install-hook.sh      # 可选：OpenClaw 关键词开关钩子
+./kimi/install-hook.sh          # 可选：Kimi Code CLI 关键词开关钩子</code></pre>
 </div>
 </div>
 
 <div class="way">
 <h3>③ npx skills 一键装 <span class="badge partial">仅技能，不含钩子</span></h3>
-<p>用 <a href="https://skills.sh">skills.sh</a> 的通用安装器，实测能正确识别并装好 <code>skills/changde-dialect</code>，自动适配 Claude Code / Codex / Cursor / OpenClaw 等 70 余个 agent；但它只拷贝技能文件，不会帮你注册确定性开关钩子（想要钩子还是走①或②）。</p>
+<p>用 <a href="https://skills.sh">skills.sh</a> 的通用安装器，实测能正确识别并装好 <code>skills/changde-dialect</code>，自动适配 Claude Code / Codex / Cursor / OpenClaw / Kimi Code CLI 等 70 余个 agent；但它只拷贝技能文件，不会帮你注册确定性开关钩子（想要钩子还是走①或②）。</p>
 <div class="copybox">
 <button class="copybtn" type="button" data-copy="npx-cmd">复制</button>
 <pre><code id="npx-cmd">npx skills add dull-bird/changde-dialect-skill</code></pre>

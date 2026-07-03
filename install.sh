@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Install the changde-dialect Agent Skill into whichever of
-# Claude Code / Codex / OpenClaw are present on this machine.
+# Claude Code / Codex / OpenClaw / Kimi Code CLI are present on this machine.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -35,8 +35,18 @@ if [ -d "$HOME/.openclaw" ]; then
   installed_any=true
 fi
 
+if [ -d "$HOME/.kimi" ]; then
+  # Kimi Code CLI merges skills from the shared ~/.agents/skills directory
+  # (merge_all_available_skills in config.toml) rather than a ~/.kimi/skills
+  # dir of its own, so it shares this install with any other tool reading
+  # the same universal directory.
+  install_into "$HOME/.agents" ".agents (Kimi Code CLI 等读取 ~/.agents/skills 的通用目录)"
+  installed_any=true
+  echo "  可选：运行 kimi/install-hook.sh 注册自动关键词开关钩子"
+fi
+
 if [ "$installed_any" = false ]; then
-  echo "没有检测到 ~/.claude、~/.codex 或 ~/.openclaw，任何一个都没装，跳过安装。"
+  echo "没有检测到 ~/.claude、~/.codex、~/.openclaw 或 ~/.kimi，任何一个都没装，跳过安装。"
   echo "你也可以手动把 skills/changde-dialect 拷贝到对应工具的 skills 目录下。"
   exit 1
 fi
