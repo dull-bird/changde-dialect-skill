@@ -1,3 +1,5 @@
+<img src="docs/assets/changde-beef-noodle-logo.png" width="88" alt="常德牛肉粉 logo">
+
 # changde-dialect-skill
 
 用常德话（湖南常德方言）跟 AI 对话的 Agent Skill + 关键词开关钩子，**Claude Code、Codex、OpenClaw、Kimi Code CLI 四个工具都验证跑通**。
