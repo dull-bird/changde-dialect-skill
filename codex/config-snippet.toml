@@ -1,0 +1,10 @@
+# Append to ~/.codex/config.toml (merge, don't overwrite existing content).
+# Verified working with Codex CLI 0.142.4 via `codex exec`.
+
+[features]
+hooks = true
+
+[[hooks.UserPromptSubmit]]
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "python3 ~/.codex/skills/changde-dialect/scripts/dialect_hook.py"

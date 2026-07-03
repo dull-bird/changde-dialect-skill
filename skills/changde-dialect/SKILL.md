@@ -17,8 +17,9 @@ description: |
 - **触发方言模式**：用户说"说常德话/讲常德话/切换方言/开启方言模式"等。此后的回复要用常德话词汇、语气词、句式，但**保持内容可懂**——常德话不是黑话，是把普通话替换成对应的方言说法，语法结构基本不变，一般用户仍能猜懂大意。
 - **退出方言模式**：用户说"退出方言/说普通话/切回普通话/关闭方言模式"等，立刻恢复正常普通话，不再夹方言词。
 - **查询模式**：用户只是问"XX方言是什么意思""常德话怎么骂人"这类问题时，不必整段切方言，正常解释+引用原词条即可。
-- 在 **Claude Code** 下，本仓库额外提供了一个 UserPromptSubmit 钩子（`claude-code/hooks/`，安装后位于 `~/.claude/skills/changde-dialect/scripts/dialect_hook.py`），会自动检测上述关键词、按会话维护开关状态，并在开启时把提醒注入上下文——如果钩子已经注入了方言指令，直接照做，不需要再重复判断关键词。
-- 在 **Codex / OpenClaw** 等尚无通用钩子机制的 Agent 下，激活依赖模型自己识别上面这些触发词（标准 Agent Skills 的语义匹配方式），效果等价，只是没有确定性状态持久化。
+- **Claude Code / Codex** 下，本仓库提供了同一个 UserPromptSubmit 钩子脚本（安装后位于 `~/.claude/skills/changde-dialect/scripts/dialect_hook.py` 或 `~/.codex/skills/changde-dialect/scripts/dialect_hook.py`，需分别跑 `claude-code/install-hook.sh` / `codex/install-hook.sh` 注册），会自动检测上述关键词、按会话维护开关状态，并在开启时把提醒注入上下文。
+- **OpenClaw** 下，本仓库提供了独立的 `openclaw/hooks/changde-dialect-toggle/`（`message:received` 记录开关状态 + `agent:bootstrap` 注入提醒），跑 `openclaw/install-hook.sh` 安装并启用。
+- 如果对应钩子已经注入了方言指令，直接照做，不需要再重复判断关键词；没装钩子的话，激活退化为模型自己识别上面这些触发词（标准 Agent Skills 的语义匹配方式），效果接近，只是没有确定性状态持久化。
 
 ## 语法核心（先学这几条，比背单词更重要）
 
