@@ -1,0 +1,32 @@
+MIT License
+
+Copyright (c) 2026 dull-bird
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Note on wordlist content: the underlying Changde-dialect glossary
+(skills/changde-dialect/references/glossary.md) is derived from
+《常德方言词语汇1000》, compiled by 水兵1986 and originally published on
+Meipian (https://www.meipian.cn/m5r5mum), whose author explicitly invited
+readers to revise and supplement the list ("欢迎修订补充完善"). It is
+included here under that invitation, with attribution. If you are the
+original author or a rights holder and have concerns about this reuse,
+please open an issue and it will be addressed promptly.
