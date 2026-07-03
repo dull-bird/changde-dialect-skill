@@ -52,7 +52,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .chat{max-width:560px;margin:26px auto 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 12px 40px -20px #1b212833}
 .bubble{border-radius:12px;padding:10px 14px;margin:8px 0;font-size:14.5px;max-width:88%}
 .bubble.you{background:color-mix(in srgb,var(--brand) 10%,var(--card));margin-left:auto;text-align:right}
-.bubble.ai{background:var(--bg);border:1px solid var(--line)}
+.bubble.ai{background:var(--bg);border:1px solid var(--line);text-align:left}
 .cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
 .cmp th,.cmp td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
 .cmp tr:last-child td{border-bottom:0}
@@ -71,7 +71,7 @@ footer a{color:var(--muted);text-decoration:underline}
 <div class="wrap">
 <div class="logo"><span class="emoji">🗣️</span><span>常德话 <span class="d">Skill</span></span></div>
 <p class="tag">用常德话跟 Claude Code / Codex / OpenClaw / Kimi Code CLI 聊天的 Agent Skill</p>
-<p class="sub">基于《常德方言词语汇1000》（水兵1986编）整理：994 条日常词条 + 151 条桃源本地歇后语，配四平台都验证跑通的关键词开关钩子——说「说常德话」就开，说「说普通话」就关。这份底本标题叫"常德方言"，实际口音偏桃源话；仓库另配了一套独立验证的汉寿话（龙阳话）官方数据，汉寿用户优先用那套。</p>
+<p class="sub"><strong>默认按汉寿话（龙阳话）回应</strong>——语保工程官方 1200 条 IPA 词表 + 口音规则，不用等你先说"我是汉寿人"。另外还整理了《常德方言词语汇1000》（水兵1986编）994 条日常词条 + 151 条桃源本地歇后语，标题叫"常德方言"但实际偏桃源腔，仅在汉寿数据没覆盖到、或你明确要其他片区口音时才用。四平台都验证跑通关键词开关钩子——说「说常德话」就开，说「说普通话」就关。</p>
 <div class="cta">
 <a class="btn primary" href="#install">安装</a>
 <a class="btn ghost" href="https://github.com/dull-bird/changde-dialect-skill">GitHub ↗</a>
@@ -81,7 +81,13 @@ footer a{color:var(--muted);text-decoration:underline}
 
 <div class="chat">
 <div class="bubble you">说常德话，你好</div>
-<div class="bubble ai">好啵！俺今朝刚上线，你就来哒。有么得事要搞，你港给俺听斗起？</div>
+<div class="bubble ai">好啵！我而今上线哒，你来哒就好。有么嘚事，尽管跟我讲。</div>
+<div class="bubble you">中午吃么嘚好？</div>
+<div class="bubble ai">我看天气蛮热的，吃碗凉面搭盘凉菜就要得，清爽点；你要想吃热和的，牛骨头粉也蛮巴适。</div>
+<div class="bubble you">那走一路去吃粉啵</div>
+<div class="bubble ai">要得！走一路去，我请客。</div>
+<div class="bubble you">煤油汉寿话怎么讲？</div>
+<div class="bubble ai">港"洋油"——语保工程那份1200词表编号0055查得到的，不是瞎编的。</div>
 <div class="bubble you">好了，说普通话吧</div>
 <div class="bubble ai">好的，已经切回普通话了！有什么可以帮你的？</div>
 </div>
@@ -89,8 +95,21 @@ footer a{color:var(--muted);text-decoration:underline}
 
 <section>
 <div class="wrap">
-<h2>词汇分类</h2>
-<p class="h2sub">994 条日常词条按语义启发式归类，另有 151 条桃源本地歇后语单独收录</p>
+<h2>汉寿话（龙阳话）专项数据——默认用这套</h2>
+<p class="h2sub">不用先说"我是汉寿人"，默认就按这套回应；水兵那份桃源腔只在这套没覆盖到时兜底</p>
+<div class="grid">
+<div class="feat"><div class="n">1200</div><h3>官方 IPA 词表</h3><p>语保工程汉寿调查点（26J41）逐字国际音标+调值，真实录音发音人，非转述</p></div>
+<div class="feat"><div class="n">→拼音</div><h3>近似拼音版</h3><p>同一份数据自动转换，不熟悉 IPA 也能看懂，原始 IPA 仍是权威版本</p></div>
+<div class="feat"><div class="n">5种</div><h3>县内口音分区</h3><p>龙阳话/南乡话/梅溪话/安乐话+西湖农场移民湘语，官方划分</p></div>
+<div class="feat"><div class="n">脚本</div><h3>确定性查词</h3><p>词典最大匹配查词 + IPA↔拼音转换，配单元测试，不靠模型凭印象</p></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<h2>桃源腔兜底词表</h2>
+<p class="h2sub">水兵1986编《常德方言词语汇1000》，994 条日常词条按语义启发式归类，另有 151 条桃源本地歇后语单独收录——标题叫"常德方言"，实际偏桃源口音，不是默认口音</p>
 <div class="grid">
 <div class="feat"><div class="n">120</div><h3>称谓与人称</h3><p>俺、玩屋里男客/堂客、嘎公嘎嘎、幺幺……</p></div>
 <div class="feat"><div class="n">78</div><h3>动植物名称</h3><p>溜蚣（蛇）、老虫（老虎）、克马（青蛙）……</p></div>
@@ -100,19 +119,6 @@ footer a{color:var(--muted);text-decoration:underline}
 <div class="feat"><div class="n">24+</div><h3>骂人贬损粗语</h3><p>核宝、搅屎棍、癫嘎恰嘎……</p></div>
 <div class="feat"><div class="n">151</div><h3>桃源本地歇后语</h3><p>瞎子点灯——白费蜡……</p></div>
 <div class="feat"><div class="n">508</div><h3>其余日常用语</h3><p>核心动词、程度副词、状态描述、俗语</p></div>
-</div>
-</div>
-</section>
-
-<section>
-<div class="wrap">
-<h2>汉寿话（龙阳话）专项数据</h2>
-<p class="h2sub">水兵那份底本偏桃源腔，汉寿用户（尤其太子庙、龙阳镇一带）改用这套，优先级更高</p>
-<div class="grid">
-<div class="feat"><div class="n">1200</div><h3>官方 IPA 词表</h3><p>语保工程汉寿调查点（26J41）逐字国际音标+调值，真实录音发音人，非转述</p></div>
-<div class="feat"><div class="n">→拼音</div><h3>近似拼音版</h3><p>同一份数据自动转换，不熟悉 IPA 也能看懂，原始 IPA 仍是权威版本</p></div>
-<div class="feat"><div class="n">5种</div><h3>县内口音分区</h3><p>龙阳话/南乡话/梅溪话/安乐话+西湖农场移民湘语，官方划分</p></div>
-<div class="feat"><div class="n">脚本</div><h3>确定性查词</h3><p>词典最大匹配查词 + IPA↔拼音转换，配单元测试，不靠模型凭印象</p></div>
 </div>
 </div>
 </section>
