@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>changde-dialect-skill — 常德话 Agent Skill</title>
 <meta name="description" content="用常德话跟 Claude Code / Codex / OpenClaw / Kimi Code CLI 聊天的 Agent Skill，基于《常德方言词语汇1000》整理，带四平台通用的关键词开关钩子。">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%A3%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="assets/changde-beef-noodle-logo.png">
 <style>
 :root{--bg:#f6f7f9;--fg:#11161d;--muted:#69707b;--line:#e7e9ee;--card:#fff;--brand:#1556e0;--brand2:#7c3aed}
 @media(prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--muted:#8b949e;--line:#21262d;--card:#161b22}}
@@ -15,7 +15,7 @@ a{color:var(--brand);text-decoration:none}
 .wrap{max-width:980px;margin:0 auto;padding:0 22px}
 header{text-align:center;padding:70px 22px 32px;background:radial-gradient(900px 380px at 50% -120px,color-mix(in srgb,var(--brand) 16%,transparent),transparent)}
 .logo{display:inline-flex;align-items:center;justify-content:center;gap:12px;font-size:34px;font-weight:800;letter-spacing:0}
-.logo .emoji{font-size:46px;line-height:1}
+.logo .logo-mark{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid color-mix(in srgb,var(--brand) 18%,var(--card));box-shadow:0 10px 30px -18px #1b2128;flex:0 0 auto}
 .logo .d{color:var(--brand)}
 .tag{font-size:20px;font-weight:600;max-width:680px;margin:18px auto 6px}
 .sub{color:var(--muted);max-width:760px;margin:0 auto}
@@ -35,6 +35,7 @@ h2{font-size:24px;letter-spacing:-.02em;text-align:center;margin:0 0 8px}
 .feat p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.5}
 pre{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-size:13.5px;line-height:1.7;text-align:left}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.feat code{background:var(--bg);padding:1px 5px;border-radius:5px;font-size:11.5px}
 .copybox{position:relative;margin:10px 0 0}
 .copybox pre{margin:0;padding-right:86px}
 .copybtn{position:absolute;top:10px;right:10px;background:var(--brand);color:#fff;border:0;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 6px 16px -10px #1556e0}
@@ -69,7 +70,7 @@ footer a{color:var(--muted);text-decoration:underline}
 <body>
 <header>
 <div class="wrap">
-<div class="logo"><span class="emoji">🗣️</span><span>常德话 <span class="d">Skill</span></span></div>
+<div class="logo"><img class="logo-mark" src="assets/changde-beef-noodle-logo.png" alt="常德牛肉粉 logo"><span>常德话 <span class="d">Skill</span></span></div>
 <p class="tag">给 AI agent 用的常德话 Skill</p>
 <p class="note" style="margin-top:0">例如 Claude Code / Codex / OpenClaw / Kimi Code CLI</p>
 <p class="sub"><strong>默认按汉寿话（龙阳话）回应</strong>——语保工程官方 1200 条 IPA 词表 + 口音规则，不用等你先说"我是汉寿人"。另外还整理了《常德方言词语汇1000》（水兵1986编）994 条日常词条 + 151 条桃源本地歇后语，标题叫"常德方言"但实际偏桃源腔，仅在汉寿数据没覆盖到、或你明确要其他片区口音时才用。四平台都验证跑通关键词开关钩子——说「说常德话」就开，说「说普通话」就关。</p>
@@ -96,14 +97,19 @@ footer a{color:var(--muted);text-decoration:underline}
 
 <section>
 <div class="wrap">
-<h2>汉寿话（龙阳话）专项数据——默认用这套</h2>
-<p class="h2sub">不用先说"我是汉寿人"，默认就按这套回应；水兵那份桃源腔只在这套没覆盖到时兜底</p>
+<h2>汉寿话（龙阳话）——默认口音</h2>
+<p class="h2sub">语保工程官方 1200 词，真人录音记的国际音标，不用先自报家门是汉寿人</p>
 <div class="grid">
-<div class="feat"><div class="n">1200</div><h3>官方 IPA 词表</h3><p>语保工程汉寿调查点（26J41）逐字国际音标+调值，真实录音发音人，非转述</p></div>
-<div class="feat"><div class="n">→拼音</div><h3>近似拼音版</h3><p>同一份数据自动转换，不熟悉 IPA 也能看懂，原始 IPA 仍是权威版本</p></div>
-<div class="feat"><div class="n">5种</div><h3>县内口音分区</h3><p>龙阳话/南乡话/梅溪话/安乐话+西湖农场移民湘语，官方划分</p></div>
-<div class="feat"><div class="n">脚本</div><h3>确定性查词</h3><p>词典最大匹配查词 + IPA↔拼音转换，配单元测试，不靠模型凭印象</p></div>
+<div class="feat"><div class="n">160</div><h3>天文时间方位</h3><p>太阳 <code>thai24Ǿiaŋ0</code>、煤油→洋油 <code>Ǿiaŋ13Ǿiou0</code></p></div>
+<div class="feat"><div class="n">130</div><h3>动植物</h3><p>蛇 <code>sa13</code>、桃子→桃嘚 <code>thau13te0</code></p></div>
+<div class="feat"><div class="n">153</div><h3>衣食住行</h3><p>床 <code>tɕhyaŋ13</code>、白酒 <code>pe13tɕiou21</code></p></div>
+<div class="feat"><div class="n">160</div><h3>身体病痛婚丧</h3><p>头→脑壳 <code>nau21khuo0</code>、放屁→打屁 <code>ta21phi13</code></p></div>
+<div class="feat"><div class="n">80</div><h3>人物亲属称谓</h3><p>岳父→丈人佬 <code>tsaŋ33zən0nau21</code>、姑父→姑爷 <code>ku55Ǿia0</code></p></div>
+<div class="feat"><div class="n">240</div><h3>劳作文娱交际</h3><p>走江湖→跑社会 <code>phau21se24xuei0</code></p></div>
+<div class="feat"><div class="n">160</div><h3>形容词性状颜色</h3><p>漂亮→乖 <code>kuai55</code>、红 <code>xoŋ13</code></p></div>
+<div class="feat"><div class="n">117</div><h3>数量代词虚词</h3><p>我 <code>Ǿuo21</code>、什么→么嘚 <code>mo21te0</code></p></div>
 </div>
+<p class="note">看不惯国际音标？<code>hanshou-pinyin-vocab.md</code> 有近似拼音版；想知道某句话里哪些词有汉寿说法，`dialect_lookup.py` 直接查给你看，不是模型现编。</p>
 </div>
 </section>
 
