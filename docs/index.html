@@ -63,6 +63,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .cmp-wrap{overflow-x:auto;border-radius:14px;box-shadow:0 12px 40px -20px #1b212833}
 .status{font-weight:700}
 .status.ok{color:#059669}
+.status.pending{color:#b45309}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:40px 22px 60px;border-top:1px solid var(--line)}
 footer a{color:var(--muted);text-decoration:underline}
 </style>
@@ -138,9 +139,9 @@ footer a{color:var(--muted);text-decoration:underline}
 <table class="cmp">
 <thead><tr><th>工具</th><th>钩子机制</th><th>验证方式</th><th>状态</th></tr></thead>
 <tbody>
-<tr><td>Claude Code</td><td><code>~/.claude/settings.json</code> 的 <code>UserPromptSubmit</code>（Python）</td><td>pipe 测试开/关/持久化/多会话隔离</td><td class="status ok">✓ 已验证</td></tr>
+<tr><td>Claude Code</td><td><code>~/.claude/settings.json</code> 的 <code>UserPromptSubmit</code>（Python）</td><td>pipe 测试汉寿话/桃源腔两种模式开关/切换/持久化/多会话隔离，8 个场景全过</td><td class="status ok">✓ 已验证</td></tr>
 <tr><td>Codex</td><td><code>~/.codex/config.toml</code> 的 <code>[[hooks.UserPromptSubmit]]</code>（同一份 Python 脚本）</td><td><code>codex exec</code> 真实跑通，日志可见 hook 触发</td><td class="status ok">✓ 已验证</td></tr>
-<tr><td>OpenClaw</td><td><code>~/.openclaw/hooks/</code> 的 <code>HOOK.md</code> + <code>handler.ts</code>（<code>message:received</code> + <code>agent:bootstrap</code>）</td><td><code>openclaw agent --local</code> 真实跑通，开/关/持久化全过</td><td class="status ok">✓ 已验证</td></tr>
+<tr><td>OpenClaw</td><td><code>~/.openclaw/hooks/</code> 的 <code>HOOK.md</code> + <code>handler.ts</code>（<code>message:received</code> + <code>agent:bootstrap</code>）</td><td>单模式版本曾 <code>openclaw agent --local</code> 真实跑通；双模式重构后语法检查通过、逻辑与 Python 版一致，gateway 需重启才生效，尚待重新验证</td><td class="status pending">◐ 待验证</td></tr>
 <tr><td>Kimi Code CLI</td><td><code>~/.kimi/config.toml</code> 的 <code>hooks = [{ event = "UserPromptSubmit", ... }]</code>（同一份 Python 脚本）</td><td><code>kimi --print</code> 真实跑通，session 状态文件落盘确认</td><td class="status ok">✓ 已验证</td></tr>
 </tbody>
 </table>

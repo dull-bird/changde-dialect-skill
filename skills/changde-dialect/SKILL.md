@@ -28,12 +28,15 @@ description: |
 
 ## 激活规则
 
-- **触发方言模式**：用户说"说常德话/讲常德话/切换方言/开启方言模式"等。此后的回复要用常德话词汇、语气词、句式，但**保持内容可懂**——常德话不是黑话，是把普通话替换成对应的方言说法，语法结构基本不变，一般用户仍能猜懂大意。
-- **退出方言模式**：用户说"退出方言/说普通话/切回普通话/关闭方言模式"等，立刻恢复正常普通话，不再夹方言词。
+**两套口音互斥，不共存**——同一时间只能处于"汉寿话模式"或"桃源腔模式"其中一个，切换到另一个会整个替换，不会叠加，避免两套词汇混着用。
+
+- **触发汉寿话模式（默认）**：用户说"说常德话/讲常德话/切换方言/开启方言模式/说汉寿话/说龙阳话"等。此后回复只用 `hanshou-ipa-vocab.md`/`hanshou-accent.md` 里的词，**不出现桃源腔词汇**（俺、克、斗、几得、各人、同斗、恰/呷等）。
+- **触发桃源腔模式**：用户明确说"说桃源话/讲桃源话/切换桃源话"。此后回复只用 `glossary.md`（水兵桃源腔底本）里的词，**不出现汉寿话专属词汇**（自家、一路、而今、么嘚等）。
+- **退出方言模式**：用户说"退出方言/说普通话/切回普通话/关闭方言模式"等，立刻恢复正常普通话，不再夹方言词，不管之前是哪个模式。
 - **查询模式**：用户只是问"XX方言是什么意思""常德话怎么骂人"这类问题时，不必整段切方言，正常解释+引用原词条即可。
-- **Claude Code / Codex / Kimi Code CLI** 下，本仓库提供了同一个 UserPromptSubmit 钩子脚本（`~/.claude/skills/changde-dialect/scripts/dialect_hook.py`，Codex 和 Kimi 都能直接复用这一份，因为它们的 hook 事件名和 stdin/stdout JSON 契约跟 Claude Code 基本一致），需分别跑 `claude-code/install-hook.sh` / `codex/install-hook.sh` / `kimi/install-hook.sh` 注册，会自动检测上述关键词、按会话维护开关状态，并在开启时把提醒注入上下文。
-- **OpenClaw** 下，本仓库提供了独立的 `openclaw/hooks/changde-dialect-toggle/`（`message:received` 记录开关状态 + `agent:bootstrap` 注入提醒），跑 `openclaw/install-hook.sh` 安装并启用。
-- 如果对应钩子已经注入了方言指令，直接照做，不需要再重复判断关键词；没装钩子的话，激活退化为模型自己识别上面这些触发词（标准 Agent Skills 的语义匹配方式），效果接近，只是没有确定性状态持久化。
+- **Claude Code / Codex / Kimi Code CLI** 下，本仓库提供了同一个 UserPromptSubmit 钩子脚本（`~/.claude/skills/changde-dialect/scripts/dialect_hook.py`，Codex 和 Kimi 都能直接复用这一份，因为它们的 hook 事件名和 stdin/stdout JSON 契约跟 Claude Code 基本一致），需分别跑 `claude-code/install-hook.sh` / `codex/install-hook.sh` / `kimi/install-hook.sh` 注册。钩子按会话维护 `mode`（`"hanshou"` / `"taoyuan"` / `null`）状态，两种模式各自注入专属提醒（互相提醒"不要混入对方词汇"），不是笼统的一份提醒文字。
+- **OpenClaw** 下，本仓库提供了独立的 `openclaw/hooks/changde-dialect-toggle/`（`message:received` 记录 `mode` 状态 + `agent:bootstrap` 注入对应模式的提醒），跟 Python 版一样区分汉寿话/桃源腔两套互斥模式，跑 `openclaw/install-hook.sh` 安装并启用。
+- 如果对应钩子已经注入了方言指令，直接照做，不需要再重复判断关键词；没装钩子的话，激活退化为模型自己识别上面这些触发词（标准 Agent Skills 的语义匹配方式），效果接近，只是没有确定性状态持久化，也没有钩子层面的互斥保证——这种情况下更要靠自己主动避免两套词汇混用。
 
 ## 汉寿话（龙阳话）默认语法与高频词——先用这套
 

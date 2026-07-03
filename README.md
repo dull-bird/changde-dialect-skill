@@ -20,10 +20,12 @@ AI：好的，已经切回普通话了！有什么可以帮你的？
 
 | 工具 | 钩子机制 | 验证方式 |
 |---|---|---|
-| Claude Code | `~/.claude/settings.json` 的 `UserPromptSubmit` hook（Python） | 手动 pipe 测试开/关/持久化/多会话隔离 |
+| Claude Code | `~/.claude/settings.json` 的 `UserPromptSubmit` hook（Python） | 手动 pipe 测试汉寿话/桃源腔两种模式开/关/切换/持久化/多会话隔离，8 个场景全过 |
 | Codex | `~/.codex/config.toml` 的 `[[hooks.UserPromptSubmit]]`（同一个 Python 脚本） | `codex exec` 真实跑通，日志里能看到 `hook: UserPromptSubmit` |
-| OpenClaw | `~/.openclaw/hooks/` 下的 `HOOK.md` + `handler.ts`（`message:received` + `agent:bootstrap` 两个事件） | `openclaw agent --local` 真实跑通，开/关/持久化全部验证 |
+| OpenClaw | `~/.openclaw/hooks/` 下的 `HOOK.md` + `handler.ts`（`message:received` + `agent:bootstrap` 两个事件） | 单模式版本 `openclaw agent --local` 真实跑通过；双模式重构后语法检查通过、逻辑与 Python 版一致，但 gateway 需重启才加载新代码，尚未重新做端到端验证 |
 | Kimi Code CLI | `~/.kimi/config.toml` 的 `hooks = [{ event = "UserPromptSubmit", ... }]`（同一个 Python 脚本） | `kimi --print` 真实跑通，状态文件按 session 落盘确认 |
+
+**两套口音互斥**：说"说常德话/说汉寿话/说龙阳话"进汉寿话模式，说"说桃源话"进桃源腔模式，两者不会同时生效，切换会整个替换而不是叠加——避免钩子的提醒文字里混进两套词汇。
 
 - **词汇分类**：称谓/人称（120）、动植物名称（78）、农具生活用具（46）、身体部位（32）、时间方位（13）、民俗礼仪与丧葬文化（22）、骂人贬损粗语（24+）、桃源本地歇后语（151）、其余日常动词/程度词/俗语（约508）
 - **语法核心**：了→哒，讲→港，去→克，看到→看斗，我→俺，很→几得，什么→么得，自己→各人……详见 `skills/changde-dialect/SKILL.md`
