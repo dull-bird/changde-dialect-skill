@@ -2,7 +2,7 @@
 
 # changde-dialect-skill
 
-用常德话（湖南常德方言）跟 AI 对话的 Agent Skill + 关键词开关钩子，**Claude Code、Codex、OpenClaw、Kimi Code CLI 四个工具都验证跑通**。
+用常德话（湖南常德方言）跟 AI 对话的 Agent Skill + 关键词开关钩子，**Claude Code、Codex、Kimi Code CLI 三个工具的钩子验证跑通；OpenClaw 目前钩子实测未触发，技能本身仍可用**（细节见下表）。
 
 🌐 网页介绍：https://dull-bird.github.io/changde-dialect-skill/
 
@@ -24,7 +24,7 @@ AI：好的，已经切回普通话了！有什么可以帮你的？
 |---|---|---|
 | Claude Code | `~/.claude/settings.json` 的 `UserPromptSubmit` hook（Python） | 手动 pipe 测试汉寿话/桃源腔两种模式开/关/切换/持久化/多会话隔离，8 个场景全过 |
 | Codex | `~/.codex/config.toml` 的 `[[hooks.UserPromptSubmit]]`（同一个 Python 脚本） | `codex exec` 真实跑通，日志里能看到 `hook: UserPromptSubmit` |
-| OpenClaw | `~/.openclaw/hooks/` 下的 `HOOK.md` + `handler.ts`（`message:received` + `agent:bootstrap` 两个事件） | 单模式版本 `openclaw agent --local` 真实跑通过；双模式重构后语法检查通过、逻辑与 Python 版一致，但 gateway 需重启才加载新代码，尚未重新做端到端验证 |
+| OpenClaw | `~/.openclaw/hooks/` 下的 `HOOK.md` + `handler.ts`（`message:received` + `agent:bootstrap` 两个事件） | 代码语法检查通过、逻辑与 Python 版一致，`openclaw hooks list` 显示"✓ ready"；哨兵标记法实测确认 `openclaw agent --local` 不会触发 handler。翻了 OpenClaw 编译后的源码定位到原因：`agent --local` 这条 CLI 命令的处理逻辑完全没有引用 hookRunner / message:received 分发 / agent:bootstrap 注入，这些机制只存在于处理真实聊天渠道（Telegram/Discord等）消息的 `bot.js`/`dispatch.js`/`monitor.js` 里——**是 OpenClaw 的 `--local` 测试命令本身没有走完整钩子链路，不是这份钩子代码的问题**。真实渠道连线后是否生效，本机没有配置渠道，尚未验证 |
 | Kimi Code CLI | `~/.kimi/config.toml` 的 `hooks = [{ event = "UserPromptSubmit", ... }]`（同一个 Python 脚本） | `kimi --print` 真实跑通，状态文件按 session 落盘确认 |
 
 **两套口音互斥**：说"说常德话/说汉寿话/说龙阳话"进汉寿话模式，说"说桃源话"进桃源腔模式，两者不会同时生效，切换会整个替换而不是叠加——避免钩子的提醒文字里混进两套词汇。
