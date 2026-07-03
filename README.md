@@ -4,7 +4,7 @@
 
 🌐 网页介绍：https://dull-bird.github.io/changde-dialect-skill/
 
-底子是《常德方言词语汇1000》（水兵1986编，[美篇原文](https://www.meipian.cn/m5r5mum)），994 条日常词条 + 151 条桃源本地歇后语，全部按语义分类整理成机器可查的参考文件。
+底子是《常德方言词语汇1000》（水兵1986编，[美篇原文](https://www.meipian.cn/m5r5mum)），994 条日常词条 + 151 条桃源本地歇后语，全部按语义分类整理成机器可查的参考文件。**这份词表标题叫"常德方言"，实际口音更偏桃源话**（汉寿本地用户指出的），常德下辖各县（桃源、汉寿、澧县、津市、安乡……）口音并不统一。仓库另外收了一套独立验证过的**汉寿话（龙阳话）专项数据**——语保工程官方 1200 条 IPA 词表 + 口音规则 + 查词脚本，用户如果明确是汉寿人，这套数据的优先级高于水兵这份桃源腔底本，详见下面"汉寿话专项数据"一节。
 
 ```
 你：说常德话，你好
@@ -27,6 +27,16 @@ AI：好的，已经切回普通话了！有什么可以帮你的？
 
 - **词汇分类**：称谓/人称（120）、动植物名称（78）、农具生活用具（46）、身体部位（32）、时间方位（13）、民俗礼仪与丧葬文化（22）、骂人贬损粗语（24+）、桃源本地歇后语（151）、其余日常动词/程度词/俗语（约508）
 - **语法核心**：了→哒，讲→港，去→克，看到→看斗，我→俺，很→几得，什么→么得，自己→各人……详见 `skills/changde-dialect/SKILL.md`
+
+## 汉寿话（龙阳话）专项数据
+
+水兵那份底本偏桃源腔，用户如果明确说自己是汉寿人（尤其太子庙、龙阳镇等县城周边片区，官方称"龙阳话"），技能会改用下面这套数据，优先级高于上面的桃源腔底本：
+
+- `references/hanshou-ipa-vocab.md` —— 中国语言资源保护工程官方汉寿调查点（编号 26J41）的完整 1200 条词汇表，逐字带国际音标 + 赵元任调值标注，来自真实录音发音人，不是转述。其中 0164/0172/0321 三条官方原始数据本身为空，不是抓取遗漏。
+- `references/hanshou-pinyin-vocab.md` —— 上面那份 IPA 表自动转换出的近似拼音版，不熟悉国际音标的人用这份更好上手（原始 IPA 仍是权威版本）。
+- `references/hanshou-accent.md` —— 汉寿口音的语音规则（n/l 不分、无翘舌音、fu/hu 合流、阴去阳平合流等）、汉寿县内 5 种口音分区说明、以及几篇可查证的学术论文摘要（人称代词读音、沧山话疑问代词等）。
+- `scripts/dialect_lookup.py` —— 词典最大匹配查词脚本，给一句话返回里面哪些词在汉寿话词表里有对应说法，避免纯靠模型印象。
+- `scripts/ipa_to_pinyin.py` —— 上面两份词表之间的转换脚本，配了 50+ 条单元测试。
 
 ## 安装
 
@@ -105,9 +115,16 @@ npx skills add dull-bird/changde-dialect-skill
 changde-dialect-skill/
 ├── install.sh                          # 一键装技能到检测到的所有工具
 ├── skills/changde-dialect/
-│   ├── SKILL.md                        # 技能定义：语法、高频词表、使用边界
-│   ├── references/glossary.md          # 完整分类词表（994 条 + 151 条歇后语）
-│   └── scripts/dialect_hook.py         # Claude Code / Codex / Kimi 共用的开关钩子脚本
+│   ├── SKILL.md                        # 技能定义：语法、高频词表、使用边界、优先级
+│   ├── references/
+│   │   ├── glossary.md                 # 水兵桃源腔底本（994 条 + 151 条歇后语）
+│   │   ├── hanshou-ipa-vocab.md        # 汉寿话官方 1200 词 IPA 表
+│   │   ├── hanshou-pinyin-vocab.md     # 上面那份的近似拼音版
+│   │   └── hanshou-accent.md           # 汉寿口音规则、分区、论文摘要
+│   └── scripts/
+│       ├── dialect_hook.py             # Claude Code / Codex / Kimi 共用的开关钩子脚本
+│       ├── dialect_lookup.py           # 词典最大匹配查词（+ test_dialect_lookup.py）
+│       └── ipa_to_pinyin.py            # IPA→近似拼音转换（+ test_ipa_to_pinyin.py）
 ├── claude-code/
 │   ├── install-hook.sh / install_hook.py
 │   └── settings-snippet.json
