@@ -95,13 +95,21 @@ def annotate(text: str, vocab: dict[str, list[VocabEntry]]) -> str:
     if not matches:
         return f"(没有在词表里查到任何词条: {text!r})"
     lines = [f"输入: {text}"]
+    saw_loan_marker = False
     for m in matches:
         for e in m.entries:
             note = f"（{e.note}）" if e.note else ""
+            if "=" in e.dialect_form:
+                saw_loan_marker = True
             lines.append(
                 f"  [{m.start}:{m.end}] {text[m.start:m.end]!r}{note} "
                 f"-> 汉寿话说法「{e.dialect_form}」 读音 {e.reading} (编号{e.num})"
             )
+    if saw_loan_marker:
+        lines.append(
+            "  注意：说法里带\"=\"的字是借音字标注，实际说话/打字时去掉\"=\"，"
+            "只取汉字本身（例如「顽=」实际写作「顽」）。"
+        )
     return "\n".join(lines)
 
 
