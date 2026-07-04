@@ -1,6 +1,6 @@
 <img src="docs/assets/changde-beef-noodle-logo.png" width="140" alt="常德牛肉粉 logo">
 
-# changde-dialect-skill
+# 常德话.skill 
 
 **汉寿龙阳话，国家语言资源保护工程官方录音，带国际音标。** 给 AI agent 用的常德话 Skill，Claude Code / Codex / OpenClaw / Kimi Code CLI 都能装，四个平台的钩子全跑通过。
 
